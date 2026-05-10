@@ -1,0 +1,126 @@
+Here is a step-by-step breakdown of how to perform the tasks shown in your materials so you can easily replicate them for your practical test tomorrow.
+
+Based on the provided document and screenshots, the goal is to install Ansible, configure your environment, and run a basic playbook that prints a message.
+
+### Step 1: Download and Install Pip
+
+You first need `pip` (Python's package manager) to install Ansible.
+
+1. Download the installation script using this command:
+
+
+`wget https://bootstrap.pypa.io/get-pip.py` 
+
+
+2. Run the script to install pip for your local user:
+
+
+`python3 get-pip.py --user` 
+
+
+
+### Step 2: Install Ansible
+
+Once `pip` is installed, use it to install the Ansible package.
+
+* Run the following command:
+
+
+`python3 -m pip install --user ansible` 
+
+
+
+### Step 3: Configure Your Environment
+
+Before running Ansible, you must update your system path and fix a common locale error.
+
+1. **Add Ansible to your PATH** so your terminal recognizes the command:
+
+
+`export PATH=$HOME/.local/bin:$PATH` 
+
+
+2. 
+**Set the Locale encoding to UTF-8.** If you try to run `ansible --version` right now, you might get an error stating: "Ansible requires the locale encoding to be UTF-8". To fix this, run:
+
+
+* 
+`export LC_ALL=C.UTF-8` 
+
+
+* 
+`export LANG=C.UTF-8` 
+
+
+
+
+3. **Verify the installation** by checking the version:
+
+
+`ansible --version` 
+
+
+
+### Step 4: Create the Inventory File
+
+An inventory file tells Ansible exactly where it needs to run its tasks.
+
+1. Open a text editor to create the file:
+
+
+`gedit host.ini` 
+
+
+2. Add the following lines to define your local machine as the target:
+```ini
+[local]
+localhost ansible_connection=local
+
+```
+
+
+
+
+
+3. Save and close the file.
+
+### Step 5: Create the Playbook
+
+A playbook is a YAML file that defines the tasks you want to execute, the order of execution, and the target hosts.
+
+1. Open a text editor to create your playbook:
+
+
+`gedit setup.yml` 
+
+
+2. Type out the following configuration to create a task that prints a simple message:
+```yaml
+- name: Message Playbook
+  hosts: local
+  gather_facts: no
+  tasks:
+    - name: Print Hello Message
+      debug:
+        msg: "Hello from Ansible"
+
+```
+
+
+
+
+
+3. Save and close the file.
+
+### Step 6: Run the Playbook
+
+Now you can execute the playbook using the inventory file you just created.
+
+* Run this command:
+
+
+`ansible-playbook -i host.ini setup.yml` 
+
+
+
+If everything is configured correctly, your terminal will display a "PLAY [Message Playbook]" header, followed by a "TASK [Print Hello Message]" section that outputs `"msg": "Hello from Ansible"`. The recap at the bottom should show `ok=1` and `failed=0`.
