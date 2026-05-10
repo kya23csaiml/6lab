@@ -1,0 +1,143 @@
+
+
+### Part 1: Azure DevOps Preparation
+
+Before creating the pipeline, you need to ensure your Azure DevOps organization allows public projects.
+
+1. In your Azure DevOps organization, go to **Organization Settings**.
+
+
+2. Navigate to **Policies** (under the Security section).
+
+
+3. Find **Allow public projects** and toggle it to **On**.
+
+
+
+---
+
+### Part 2: Local Environment Setup
+
+Before generating the project, configure your local environment variables in the Windows Command Prompt to point to your specific Java, Maven, and Gradle installations.
+
+Open your Command Prompt and execute the following commands. You can verify each installation by checking its version:
+
+```cmd
+C:\Users\Student>set JAVA_HOME=C:\Program Files\java\openlogic-openjdk-17.0.18+8-windows-x64
+C:\Users\Student>set PATH=%JAVA_HOME%\bin;%PATH%
+C:\Users\Student>java --version
+openjdk 17.0.18 2026-01-20
+OpenJDK Runtime Environment OpenLogic-OpenJDK (build 17.0.18+8-adhoc..jdk17u)
+OpenJDK 64-Bit Server VM OpenLogic-OpenJDK (build 17.0.18+8-adhoc..jdk17u, mixed mode, sharing)
+
+C:\Users\Student>javac -version
+javac 17.0.18
+
+C:\Users\Student>set MAVEN_HOME=C:\Program Files\maven\apache-maven-3.9.12
+C:\Users\Student>set PATH=%MAVEN_HOME%\bin;%PATH%
+C:\Users\Student>mvn -version
+Apache Maven 3.9.12 (848fbb4bf2d427b72bdb2471c22fced7ebd9a7a1)
+Maven home: C:\Program Files\maven\apache-maven-3.9.12
+Java version: 17.0.18, vendor: OpenLogic, runtime: C:\Program Files\java\openlogic-openjdk-17.0.18+8-windows-x64
+Default locale: en_IN, platform encoding: Cp1252
+OS name: "windows 11", version: "10.0", arch: "amd64", family: "windows"
+
+C:\Users\Student>set GRADLE_HOME=C:\Users\Student\Downloads\gradle-9.3.1-bin (4)\gradle-9.3.1
+C:\Users\Student>set PATH=%GRADLE_HOME%\bin;%PATH%
+C:\Users\Student>gradle -version
+------------------------------------------------------------
+Gradle 9.3.1
+------------------------------------------------------------
+
+```
+
+---
+
+### Part 3: Creating the Local Maven Project
+
+Now that Maven is configured in your terminal, you can generate the boilerplate Java application.
+
+1. In the same Command Prompt window (or Git Bash, if you set the variables globally), create a new directory by typing `mkdir maventest1`.
+
+
+2. Navigate into that directory by typing `cd maventest1`.
+
+
+3. Run the following Maven command to generate a "Hello World" project:
+
+
+```cmd
+mvn archetype:generate -DgroupId=com.dineshonjava -DartifactId=Javateam -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+
+```
+
+
+
+---
+
+### Part 4: Pushing Code to GitHub
+
+Next, store this code in a remote repository so Azure DevOps can access it.
+
+1. Go to your GitHub account and create a new repository (e.g., named `maventestazure`).
+
+
+2. In your terminal, initialize a local git repository by typing `git init`.
+
+
+3. Add all your project files to the staging area with `git add .`.
+
+
+4. Commit the changes with a message: `git commit -m "azure pipeline example"`.
+
+
+5. Rename the default branch to main: `git branch -M main`.
+
+
+6. Link your local repository to the GitHub remote repository: `git remote add origin https://github.com/qurumurthy974/maventestazure.git` *(replace with your actual GitHub URL)*.
+
+
+7. Push the code to GitHub using `git push -u origin main`.
+
+
+
+---
+
+### Part 5: Creating the Azure Pipeline
+
+With your code on GitHub, you can set up the CI/CD pipeline in Azure.
+
+1. Go back to Azure DevOps and create a new project (e.g., `maventestaz`). Make sure you set the **Visibility** to **Public**.
+
+
+2. Once the project is created, click on **Pipelines** in the left-hand menu and select **Create pipeline**.
+
+
+3. When Azure asks "Where is your code?", select **GitHub**.
+
+
+4. You will be prompted to sign in and authorize Azure Pipelines to access your GitHub account.
+
+
+5. Select the repository you just created (e.g., `maventestazure`).
+
+
+6. Click **Approve and Install** to finalize the connection between GitHub and Azure.
+
+
+
+---
+
+### Part 6: Configuring and Running the Pipeline
+
+1. After authorization, Azure will present you with pipeline templates. Select the **Maven** starter pipeline.
+
+
+2. Azure will generate an `azure-pipelines.yml` file. Click **Save and run**.
+
+
+3. 
+**Important Troubleshooting Step:** The initial run might fail. This is usually because the pipeline cannot find the `pom.xml` file. You need to edit the YAML file to provide the correct path to your `pom.xml` (for example, updating it to `mavenPOMFile: 'JavaHelloWorld/pom.xml'`).
+
+
+4. Once corrected, the pipeline will run successfully. You can click on the **Agent job** to view the live logs as it goes through initialization, checking out the code, and running the Maven build.
