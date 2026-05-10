@@ -1,0 +1,72 @@
+Here is the detailed, step-by-step breakdown of **Program 11**, focusing on Continuous Deployment (CD).
+
+While your local environment variables (Java, Maven, Gradle) were essential for building and testing the code locally in Program 10, **Program 11 takes place entirely within the Azure DevOps cloud dashboard**. This experiment picks up right where Program 10 left off: taking the software package (the "Artifact") that Azure just finished building and deploying it using a Release Pipeline.
+
+### Part 1: Enabling Classic Release Pipelines
+
+By default, Azure DevOps might hide the older "Classic" release pipelines. You need to enable them in your settings before you can proceed.
+
+1. In your Azure DevOps workspace, go to the bottom left and click on **Organization settings**.
+
+
+2. Under the **Pipelines** section in the left menu, click on **Settings**.
+
+
+3. Scroll down until you find the toggle for **Disable creation of classic release pipelines**. Toggle this switch to **Off**.
+
+
+4. 
+(Note: Ensure that **Disable creation of classic build pipelines** is also toggled to **Off**).
+
+
+
+### Part 2: Navigating to Releases
+
+Once the settings are updated, the Releases tool will become visible.
+
+1. Navigate back to your specific Project dashboard (e.g., `maventest1234` or `smarthotel`).
+
+
+2. On the left-hand menu, click on **Pipelines**. You will now see a new option in the dropdown list called **Releases**.
+
+
+3. Click on **Releases** to open the release management dashboard.
+
+### Part 3: Creating and Configuring the Release
+
+Here, you will link the output of your build to the deployment stage.
+
+1. Click the **+ New** button and select **New release pipeline**.
+
+
+2. **Add an Artifact:** You need to tell the pipeline *what* to deploy. In the "Artifacts" box, click to add a source.
+
+
+3. Select the Build Pipeline you created in Program 10 as the source (e.g., `SmartHotel-CouponManagement`). This ensures that whenever that build finishes, this release grabs the resulting package.
+
+
+4. 
+**Add a Stage:** Next to the artifact, you will set up a deployment stage (e.g., "Stage 1" or "Stage 2"). This represents the environment you are deploying to.
+
+
+
+### Part 4: Running and Monitoring the Release Deployment
+
+Finally, you will trigger the release and watch the Azure Agent do the work.
+
+1. Once configured, click **Create release** to trigger the deployment manually.
+
+
+2. You will see a new release generated (e.g., "Release-3") marked as **Manually triggered**.
+
+
+3. Click on the stage (e.g., **Stage 2**) to monitor its progress.
+
+
+4. A window will pop up showing the **Deployment process** running on the agent. You can click **View logs** to watch the live terminal output.
+
+
+5. In the logs, you will see the cloud agent sequentially execute the deployment tasks: **Initialize job**, **Download Artifacts** (grabbing the `.jar` or `.war` files), running any final tasks, and finally **Finalize Job**.
+
+
+6. Once all steps show a green checkmark indicating they have **succeeded**, your application has been successfully deployed!
